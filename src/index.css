@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-bg-white text-text-primary font-sans;
+    margin: 0;
+  }
+
+  button {
+    font-family: inherit;
+  }
+
+  /* Hide number input spinners */
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-bg-surface rounded-card shadow-card;
+  }
+
+  .btn-primary {
+    @apply bg-primary-green text-white font-semibold rounded-card transition-all
+      active:scale-[0.98] hover:brightness-105 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-bg-surface text-text-primary font-semibold rounded-card transition-all
+      active:scale-[0.98] hover:bg-bg-surface-dark;
+  }
+}
+
+@layer utilities {
+  .goal-slider,
+  .whatif-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    border-radius: 9999px;
+    background: linear-gradient(
+      to right,
+      #00D09C 0%,
+      #00D09C var(--fill, 0%),
+      #EBEBEB var(--fill, 0%),
+      #EBEBEB 100%
+    );
+    outline: none;
+    cursor: pointer;
+  }
+  .goal-slider::-webkit-slider-thumb,
+  .whatif-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 9999px;
+    background: #ffffff;
+    border: 3px solid #00D09C;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transition: transform 0.12s ease;
+  }
+  .goal-slider::-webkit-slider-thumb:active,
+  .whatif-slider::-webkit-slider-thumb:active {
+    transform: scale(1.1);
+  }
+  .goal-slider::-moz-range-thumb,
+  .whatif-slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 9999px;
+    background: #ffffff;
+    border: 3px solid #00D09C;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+  }
+
+  .scrollbar-none::-webkit-scrollbar { display: none; }
+  .scrollbar-none { scrollbar-width: none; }
+}
