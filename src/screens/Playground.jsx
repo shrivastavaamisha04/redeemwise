@@ -10,7 +10,7 @@ import { useViewMode } from '../context/ViewModeContext.jsx';
 
 function EmptyState({ onAdd }) {
   return (
-    <div className="card p-8 sm:p-10 text-center">
+    <div className="card p-8 sm:p-10 text-center max-w-[600px] mx-auto">
       <div className="mx-auto w-14 h-14 rounded-full bg-primary-green/10 flex items-center justify-center text-primary-green mb-4">
         <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <rect x="3" y="3" width="18" height="18" rx="3" />
@@ -217,7 +217,7 @@ export default function Playground() {
         </div>
       )}
 
-      <p className="text-[11px] text-text-secondary italic text-center mt-4 pb-2">
+      <p className="text-[11px] text-text-secondary italic text-center pb-2" style={{ marginTop: '24px' }}>
         RedeemWise is a planning tool, not financial or tax advice. Consult a qualified professional before making redemption decisions.
       </p>
     </Layout>

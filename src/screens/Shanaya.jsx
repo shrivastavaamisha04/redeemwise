@@ -59,22 +59,27 @@ export default function Shanaya() {
               <FundCard key={fund.id} fund={fund} />
             ))}
           </div>
-          <p className="text-[11px] text-text-secondary mt-3">
-            This is a sample portfolio.{' '}
-            <Link to="/" className="text-brand-blue font-semibold hover:underline">
-              Build your own →
+          <div className="mt-3 flex flex-col gap-1">
+            <p className="text-[11px] text-text-secondary">
+              This is a sample portfolio.{' '}
+              <Link to="/" className="text-brand-blue font-semibold hover:underline">
+                Build your own →
+              </Link>
+            </p>
+            <Link to="/how-we-calculate" className="text-[11px] text-brand-blue font-semibold hover:underline">
+              How we calculate our recommendations →
             </Link>
-          </p>
+          </div>
         </section>
       </div>
 
       <div
-        className="fixed z-50 bg-bg-white"
+        className="fixed z-50 bg-bg-white md:bg-transparent shadow-[0_-4px_12px_rgba(0,0,0,0.06)] md:shadow-none"
         style={{ bottom: 0, left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: '800px', padding: '12px 16px 24px' }}
       >
         <Link
           to="/how-we-calculate"
-          className="block text-center text-text-secondary hover:underline"
+          className="md:hidden block text-center text-text-secondary hover:underline"
           style={{ fontSize: '11px', marginBottom: '6px' }}
         >
           How we calculate our recommendations →
