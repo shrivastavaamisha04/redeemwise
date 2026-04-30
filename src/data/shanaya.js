@@ -87,7 +87,7 @@ export const SHANAYA_PORTFOLIO = [
 
 export const SHANAYA_PROFILE = {
   name: 'Shanaya',
-  taxSlab: 0.3,
+  taxSlab: 0.15,
   goal: 1000000,
   goalPurpose: 'Car',
   totalInvested: 2100000,
@@ -107,6 +107,9 @@ export const GOAL_PURPOSES = [
 export const TAX_SLABS = [
   { label: '0%', value: 0 },
   { label: '5%', value: 0.05 },
+  { label: '10%', value: 0.1 },
+  { label: '15%', value: 0.15 },
   { label: '20%', value: 0.2 },
+  { label: '25%', value: 0.25 },
   { label: '30%', value: 0.3 },
 ];
