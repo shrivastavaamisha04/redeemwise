@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Toggle from './Toggle.jsx';
 import { useViewMode } from '../context/ViewModeContext.jsx';
 
@@ -13,7 +14,7 @@ export default function Layout({ children }) {
     <div className="min-h-screen bg-bg-white flex flex-col">
       <header className="sticky top-0 z-30 bg-bg-white/85 backdrop-blur border-b border-bg-surface">
         <div className="mx-auto w-full max-w-app px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 min-w-0">
+          <Link to="/" className="flex items-center gap-2 min-w-0">
             <span
               className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-primary-green text-white font-bold shrink-0"
               aria-hidden
@@ -30,7 +31,7 @@ export default function Layout({ children }) {
                 Smart MF redemption
               </div>
             </div>
-          </div>
+          </Link>
           <Toggle
             options={MODE_OPTIONS}
             value={mode}
