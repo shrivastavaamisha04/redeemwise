@@ -47,19 +47,33 @@ const TYPE_ACCENT = {
 
 function exitLoadStatus(fund) {
   if (fund.exitLoadPercent === 0) {
-    return { variant: 'positive', label: 'No exit load' };
+    return { status: 'none', variant: 'positive' };
   }
   if (fund.holdingMonths >= fund.exitLoadPeriodMonths) {
-    return { variant: 'positive', label: 'Load cleared' };
+    return { status: 'cleared', variant: 'positive' };
   }
   const period =
     fund.exitLoadPeriodMonths >= 12
       ? `${Math.round(fund.exitLoadPeriodMonths / 12)} yr`
       : `${fund.exitLoadPeriodMonths} mo`;
   return {
+    status: 'active',
     variant: 'warning',
-    label: `${fund.exitLoadPercent}% < ${period}`,
+    activeLabel: `${fund.exitLoadPercent}% < ${period}`,
   };
+}
+
+function exitLoadTooltip(fund) {
+  if (fund.exitLoadPercent === 0) {
+    return fund.type === 'elss'
+      ? 'This fund has no withdrawal penalty. 3-year lock-in is complete.'
+      : 'This fund has no withdrawal penalty.';
+  }
+  if (fund.holdingMonths >= fund.exitLoadPeriodMonths) {
+    return "You're past the early withdrawal window. No penalty applies.";
+  }
+  const penalty = Math.round(1000000 * fund.exitLoadPercent / 100);
+  return `Early withdrawal penalty of ${fund.exitLoadPercent}% applies. Equivalent to ₹${penalty.toLocaleString('en-IN')} on a ₹10L redemption.`;
 }
 
 export default function FundCard({ fund, onEdit, onDelete }) {
@@ -70,13 +84,23 @@ export default function FundCard({ fund, onEdit, onDelete }) {
     ? (fund.totalGains / fund.amountInvested) * 100 : 0;
   const positive = fund.totalGains >= 0;
   const exitLoad = exitLoadStatus(fund);
+  const exitLoadLabel = !isExpert
+    ? (exitLoad.status === 'active'
+        ? `Early withdrawal penalty ${fund.exitLoadPercent}%`
+        : 'No early withdrawal penalty')
+    : (exitLoad.status === 'none'
+        ? 'No exit load'
+        : exitLoad.status === 'cleared'
+        ? 'Exit load cleared'
+        : exitLoad.activeLabel);
+  const tooltip = exitLoadTooltip(fund);
   const typeLabel = TYPE_LABEL[fund.type] ?? fund.type;
   const tl = isExpert ? taxLine(fund) : null;
   const accent = TYPE_ACCENT[fund.type] ?? TYPE_ACCENT.equity;
 
   return (
     <article
-      className="relative overflow-hidden"
+      className="relative"
       style={{
         borderLeft: `3px solid ${accent.border}`,
         borderRadius: '12px',
@@ -118,9 +142,20 @@ export default function FundCard({ fund, onEdit, onDelete }) {
           {fund.name}
         </h3>
         <div className="flex items-center gap-1 shrink-0">
-          <Badge variant={exitLoad.variant} className="px-2 py-0.5 text-[11px]">
-            {exitLoad.label}
-          </Badge>
+          <div className="relative group">
+            <Badge variant={exitLoad.variant} className="px-2 py-0.5 text-[11px]">
+              {exitLoadLabel}
+            </Badge>
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+              <div className="bg-[#1C1C1C] text-white text-[11px] leading-relaxed px-3 py-[6px] rounded-[8px] text-center" style={{ minWidth: '200px', whiteSpace: 'normal' }}>
+                {tooltip}
+              </div>
+              <div
+                className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0"
+                style={{ borderLeft: '4px solid transparent', borderRight: '4px solid transparent', borderTop: '4px solid #1C1C1C' }}
+              />
+            </div>
+          </div>
           {onEdit && (
             <button
               type="button"

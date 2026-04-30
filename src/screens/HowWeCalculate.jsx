@@ -94,6 +94,9 @@ export default function HowWeCalculate() {
               <P>
                 Source: Finance (No. 2) Act 2024, effective July 23, 2024. Section 50AA introduced by Finance Act 2023. Confirmed unchanged by Union Budget 2026.
               </P>
+              <P>
+                Exit load is a redemption fee charged by the AMC, typically 1% for equity funds if redeemed within 12 months, 0.5% for debt funds within 6 months, and nil for ELSS (post lock-in). It is calculated on the redemption amount, not the gain. RedeemWise factors exit load into the total cost for each strategy.
+              </P>
             </>
           ) : (
             <div className="space-y-3">
@@ -109,6 +112,9 @@ export default function HowWeCalculate() {
               </P>
               <P>
                 <strong className="text-text-primary">Hybrid funds</strong> (balanced, dynamic asset allocation): if held over 2 years, 12.5%. Otherwise your slab rate.
+              </P>
+              <P>
+                <strong className="text-text-primary">Early withdrawal penalty (Exit Load):</strong> Most equity funds charge a small fee of around 1% if you withdraw within 1 year of investing. This is called an exit load. After that window, no penalty applies. We always check this before recommending which funds to redeem.
               </P>
             </div>
           )}

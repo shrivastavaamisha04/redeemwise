@@ -44,8 +44,8 @@ src/
 │   ├── Badge.jsx                      # Variants: equity, elss, debt, hybrid, gold, gold_mf, gold_etf, positive, negative, warning, info, neutral
 │   ├── DonutChart.jsx                 # SVG donut + legend, 140×140, stroke 18
 │   ├── PortfolioSummary.jsx           # Value, gains, allocation donut (groups elss into equity)
-│   ├── FundCard.jsx                   # Compact card: 3px left border in type accent color, subtle gradient tint, 12px/14px padding. Row 1: name + exit load badge + edit/delete. Row 2: type/category badges + holding period. Row 3: gains + current value. Expert adds divider row: annualised return + tax classification. Delete opens in-card confirm overlay (fund name wraps 2 lines).
-│   ├── AddFundForm.jsx                # Bottom-sheet modal: 300ms-debounced MFAPI search, type options (equity/elss/hybrid/debt/gold_etf/gold_mf), NAV-based "from units" mode, exit-load defaults (override-aware), inline validation. Legacy 'gold' type migrated to 'gold_mf' on edit.
+│   ├── FundCard.jsx                   # Compact card: 3px left border in type accent color, subtle gradient tint, 12px/14px padding. Row 1: name + exit load badge + edit/delete. Row 2: type/category badges + holding period. Row 3: gains + current value. Expert adds divider row: annualised return + tax classification. Delete opens in-card confirm overlay. Exit load badge has desktop hover tooltip (dark pill, 150ms fade, downward arrow). Simple mode labels: "No early withdrawal penalty" / "Early withdrawal penalty X%". Expert mode labels: "No exit load" / "Exit load cleared" / "X% < N yr". overflow-hidden removed from article so tooltip can escape above card boundary.
+│   ├── AddFundForm.jsx                # Bottom-sheet modal: 300ms-debounced MFAPI search, type options (equity/elss/hybrid/debt/gold_etf/gold_mf), NAV-based "from units" mode, exit-load defaults (override-aware), inline validation. Legacy 'gold' type migrated to 'gold_mf' on edit. Amount inputs accept decimals (step="0.01", inputMode="decimal"); formatAmountDisplay() shows ₹X,XX,XXX.XX when decimals present, whole rupees otherwise.
 │   ├── GoalInput.jsx                  # Modal: amount, purpose pills, slab pills. Props: redirectTo (default /shanaya/recommend), highlightSlab (adds Simple/Expert helper copy + tinted bg, used by playground)
 │   ├── StrategyAccordionItem.jsx      # Accordion item. Collapsed: name + cost + badges. Expanded: action headline, cost summary (Simple: cost+received; Expert: tax+load=cost), fund rows (Simple: name+amount; Expert: name+amount+full-width progress bar+tax label+% of fund), explanation, inline insights, "Read less" collapse button.
 │   ├── GoalAdjuster.jsx               # ₹1L–₹30L slider + ± buttons, ₹50K step; reused inside GoalEditPopover
@@ -53,10 +53,10 @@ src/
 │   ├── WhatIfSlider.jsx               # 0–12 month holding-period slider; shifts funds, surfaces threshold crossings, explains zero-savings case
 │   └── SmartSuggestions.jsx           # Cross-FY split, wait-to-save, tax-loss-harvest, SIP FIFO note (conditional, except SIP)
 └── screens/
-    ├── Playground.jsx                 # Empty state (+ Add Fund CTA, two text links: sample portfolio + how we calculate). Portfolio grid: FundCard with edit/delete, "+ Add fund" dashed button above grid, clear-all confirm. Simple mode shows tax info banner. Sticky "I need to withdraw money" → GoalInput → /recommend.
-    ├── Shanaya.jsx                    # Greeting, summary, fund grid, "Build your own →" link, sticky CTA. Simple mode shows tax info banner. Consumes location.state.reopenGoal once.
+    ├── Playground.jsx                 # Empty state (+ Add Fund CTA, two text links: sample portfolio + how we calculate). "View sample portfolio →" at top is an outlined green pill link. Portfolio grid: FundCard with edit/delete, "+ Add fund" dashed button above grid, clear-all confirm. Simple mode shows tax info banner. Fixed-bottom "Plan my redemption" CTA (shown only when funds > 0) → GoalInput → /recommend. pb-20 on content area keeps last card clear of fixed button.
+    ├── Shanaya.jsx                    # "← Back to playground" text button at top. Greeting, summary, fund grid, "Build your own →" link. Simple mode shows tax info banner. Fixed-bottom "Plan my redemption" CTA. Consumes location.state.reopenGoal once. pb-20 on content area.
     ├── Recommendations.jsx            # source="shanaya"|"playground" prop. Accordion strategy list (all start collapsed, tap to expand, tap again to collapse, "Read less" at bottom of expanded card). Non-active cards dim to opacity-60 (still clickable). Disclaimer line + "What's included and excluded?" link to /how-we-calculate at bottom.
-    └── HowWeCalculate.jsx             # Four sections (Simple/Expert variants): What this tool does, How tax is calculated (Expert: full tax table), Important limitations, Recommendation logic (Expert: score formula). Footer disclaimer. Back arrow navigates -1.
+    └── HowWeCalculate.jsx             # Four sections (Simple/Expert variants): What this tool does, How tax is calculated (Expert: full tax table + exit load paragraph), Important limitations, Recommendation logic (Expert: score formula). Simple mode "How tax is calculated" includes exit load explainer paragraph. Footer disclaimer. Back arrow navigates -1.
 ```
 
 ## Design system (Tailwind config)
@@ -71,7 +71,7 @@ Colors are extended in `tailwind.config.js`. Use these tokens, not hex:
 
 Typography: DM Sans (Google Fonts, loaded in `index.html`).
 Cards: `rounded-card` (12px) + `shadow-card` (subtle), or `.card` utility.
-Layout: mobile-first, container `max-w-app` (1000px), sticky CTA on `<sm`.
+Layout: mobile-first, container `max-w-app` (1000px). Primary CTA buttons use `fixed bottom-0 left-0 right-0 z-40 bg-bg-white px-4 py-3` on all screen sizes. CTA button border-radius is `rounded-card` (12px) — not fully rounded. Small pill badges stay `rounded-full`.
 Animation: `animate-fade-in` keyframe (220ms ease-out, 4px translateY) is set on the strategy detail card and accordion bodies.
 
 ## Indian formatting
@@ -161,7 +161,7 @@ Spread is small here because no exit loads trigger. At ~₹28L the spread widens
 ## Playground data flow
 - `usePortfolio()` is the single source of truth — holds the array, mirrors to `localStorage` (key `redeemwise.playground.portfolio.v1`) on every change, and re-derives `holdingMonths`/`totalGains`/`annualizedReturn` from raw inputs (`investmentDate`, `amountInvested`, `currentValue`) on read so user-facing numbers stay accurate as time passes.
 - `Playground.jsx` mounts the hook and renders empty state → `AddFundForm` (add) or grid + `AddFundForm` (edit). Submit calls `addFund`/`updateFund`. The "+ add another" tile is disabled at `MAX_FUNDS = 15`.
-- "I need to withdraw money" → `GoalInput` with `redirectTo="/recommend"` and `highlightSlab` → navigates with `state: { goal, taxSlab, goalPurpose }`.
+- "Plan my redemption" → `GoalInput` with `redirectTo="/recommend"` and `highlightSlab` → navigates with `state: { goal, taxSlab, goalPurpose }`.
 - `Recommendations` with `source="playground"` calls `usePortfolio()` itself (not via prop) so localStorage edits are picked up live; the `<Navigate to="/" replace />` guard fires when goal ≤ 0 *or* the portfolio has zero funds.
 - MFAPI calls in `AddFundForm` fail open: a timeout/error returns `[]` for search and `null` for NAV, which the form renders as "enter manually" copy. **Manual entry must always work even when MFAPI is down — don't add a hard dependency.**
 

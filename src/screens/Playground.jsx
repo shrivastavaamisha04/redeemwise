@@ -72,7 +72,7 @@ export default function Playground() {
 
   return (
     <Layout>
-      <div className="space-y-5">
+      <div className="space-y-5 pb-[100px] overflow-x-hidden">
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div>
             <h1 className="text-xl sm:text-2xl font-bold text-text-primary tracking-tight">
@@ -84,7 +84,7 @@ export default function Playground() {
           </div>
           <Link
             to="/shanaya"
-            className="text-xs font-semibold text-brand-blue hover:underline shrink-0 mt-1"
+            className="text-[13px] font-semibold border border-primary-green text-primary-green rounded-full px-4 py-1.5 hover:bg-primary-green/5 transition-colors shrink-0 mt-1"
           >
             View sample portfolio →
           </Link>
@@ -146,14 +146,14 @@ export default function Playground() {
       </div>
 
       {funds.length > 0 && (
-        <div className="fixed bottom-0 inset-x-0 z-20 sm:static sm:mt-6 bg-gradient-to-t from-bg-white via-bg-white to-bg-white/0 sm:bg-none pt-6 sm:pt-0 pb-4 sm:pb-0 px-4 sm:px-0">
-          <div className="mx-auto w-full max-w-app sm:max-w-none">
+        <div className="fixed bottom-0 left-0 right-0 w-full z-50 bg-bg-white px-4 pt-3 pb-6">
+          <div className="mx-auto w-full max-w-app">
             <button
               type="button"
               onClick={() => setGoalOpen(true)}
-              className="btn-primary w-full py-4 text-base shadow-card-hover sm:shadow-card"
+              className="btn-primary w-full py-4 text-base shadow-card-hover"
             >
-              I need to withdraw money
+              Plan my redemption
             </button>
           </div>
         </div>

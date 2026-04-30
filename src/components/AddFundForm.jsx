@@ -60,6 +60,16 @@ function defaultState(initial) {
   };
 }
 
+function formatAmountDisplay(val) {
+  const num = Number(val);
+  if (!num) return '';
+  const decimals = Number.isInteger(num) ? 0 : 2;
+  return '₹' + new Intl.NumberFormat('en-IN', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: 2,
+  }).format(num);
+}
+
 function formatDateShort(d) {
   if (!d) return '';
   const date = d instanceof Date ? d : new Date(d);
@@ -374,9 +384,9 @@ export default function AddFundForm({ open, onClose, onSubmit, initial, mode = '
               <input
                 id="amount-invested"
                 type="number"
-                inputMode="numeric"
+                inputMode="decimal"
                 min="0"
-                step="100"
+                step="0.01"
                 value={state.amountInvested}
                 onChange={(e) => setState((s) => ({ ...s, amountInvested: e.target.value }))}
                 placeholder="5,00,000"
@@ -385,7 +395,7 @@ export default function AddFundForm({ open, onClose, onSubmit, initial, mode = '
             </div>
             {investedNum > 0 && (
               <div className="text-xs text-text-secondary mt-1.5 tabular-nums">
-                {formatCurrency(investedNum)}
+                {formatAmountDisplay(investedNum)}
               </div>
             )}
             {errors.amountInvested && (
@@ -432,9 +442,9 @@ export default function AddFundForm({ open, onClose, onSubmit, initial, mode = '
                 <span className="text-lg font-bold text-text-secondary">₹</span>
                 <input
                   type="number"
-                  inputMode="numeric"
+                  inputMode="decimal"
                   min="0"
-                  step="100"
+                  step="0.01"
                   value={state.currentValue}
                   onChange={(e) => setState((s) => ({ ...s, currentValue: e.target.value }))}
                   placeholder="7,20,000"

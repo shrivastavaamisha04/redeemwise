@@ -22,8 +22,15 @@ export default function Shanaya() {
 
   return (
     <Layout>
-      <div className="space-y-5">
+      <div className="space-y-5 overflow-x-hidden" style={{ height: '100vh', overflowY: 'auto', paddingBottom: '90px' }}>
         <div>
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            className="flex items-center gap-1 text-xs text-text-secondary hover:text-text-primary transition-colors mb-3"
+          >
+            ← Back to playground
+          </button>
           <h1 className="text-xl sm:text-2xl font-bold text-text-primary tracking-tight">
             Hi {SHANAYA_PROFILE.name}, here's your portfolio
           </h1>
@@ -61,17 +68,24 @@ export default function Shanaya() {
         </section>
       </div>
 
-      {/* Sticky CTA on mobile, inline on larger screens */}
-      <div className="fixed bottom-0 inset-x-0 z-20 sm:static sm:mt-6 bg-gradient-to-t from-bg-white via-bg-white to-bg-white/0 sm:bg-none pt-6 sm:pt-0 pb-4 sm:pb-0 px-4 sm:px-0">
-        <div className="mx-auto w-full max-w-app sm:max-w-none">
-          <button
-            type="button"
-            onClick={() => setGoalOpen(true)}
-            className="btn-primary w-full py-4 text-base shadow-card-hover sm:shadow-card"
-          >
-            I need to withdraw money
-          </button>
-        </div>
+      <div
+        className="fixed z-50 bg-bg-white"
+        style={{ bottom: 0, left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: '800px', padding: '12px 16px 24px' }}
+      >
+        <Link
+          to="/how-we-calculate"
+          className="block text-center text-text-secondary hover:underline"
+          style={{ fontSize: '11px', marginBottom: '6px' }}
+        >
+          How we calculate our recommendations →
+        </Link>
+        <button
+          type="button"
+          onClick={() => setGoalOpen(true)}
+          className="btn-primary w-full py-4 text-base shadow-card-hover"
+        >
+          Plan my redemption
+        </button>
       </div>
 
       <GoalInput
