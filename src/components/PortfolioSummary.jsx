@@ -4,25 +4,28 @@ import { formatCurrency, formatCurrencyShort, formatPercent } from '../utils/for
 
 const TYPE_COLORS = {
   equity: '#00D09C',
-  elss: '#08F6B6',
   debt: '#5367F5',
-  gold: '#F5A623',
+  gold: '#EF9F27',
+  hybrid: '#F5A623',
 };
 
 const TYPE_LABELS = {
   equity: 'Equity',
-  elss: 'ELSS',
   debt: 'Debt',
   gold: 'Gold',
+  hybrid: 'Hybrid',
 };
 
 function buildSegments(funds) {
   const totals = funds.reduce((acc, fund) => {
-    const bucket = fund.type === 'elss' ? 'equity' : fund.type;
+    let bucket;
+    if (fund.type === 'equity' || fund.type === 'elss') bucket = 'equity';
+    else if (fund.type === 'gold_mf' || fund.type === 'gold_etf' || fund.type === 'gold') bucket = 'gold';
+    else bucket = fund.type;
     acc[bucket] = (acc[bucket] || 0) + fund.currentValue;
     return acc;
   }, {});
-  const order = ['equity', 'debt', 'gold'];
+  const order = ['equity', 'debt', 'gold', 'hybrid'];
   return order
     .filter((key) => totals[key])
     .map((key) => ({
