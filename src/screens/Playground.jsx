@@ -143,6 +143,10 @@ export default function Playground() {
             </section>
           </>
         )}
+
+        <p className="text-[11px] text-text-secondary italic text-center mt-6">
+          RedeemWise is a planning tool, not financial or tax advice. Consult a qualified professional before making redemption decisions.
+        </p>
       </div>
 
       {funds.length > 0 && (
@@ -217,9 +221,6 @@ export default function Playground() {
         </div>
       )}
 
-      <p className="text-[11px] text-text-secondary italic text-center pb-2" style={{ marginTop: '24px' }}>
-        RedeemWise is a planning tool, not financial or tax advice. Consult a qualified professional before making redemption decisions.
-      </p>
     </Layout>
   );
 }
